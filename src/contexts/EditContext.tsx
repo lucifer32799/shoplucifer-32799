@@ -1,21 +1,21 @@
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
+export interface Product {
+  id: string;
+  title: string;
+  description: string;
+  price: string;
+  image: string;
+}
+
 export interface EditableContent {
   heroTitle: string;
   heroSubtitle: string;
   heroButtonText: string;
   aboutTitle: string;
   aboutDescription: string;
-  product1Title: string;
-  product1Description: string;
-  product1Price: string;
-  product2Title: string;
-  product2Description: string;
-  product2Price: string;
-  product3Title: string;
-  product3Description: string;
-  product3Price: string;
+  featuredProductsTitle: string;
   footerText: string;
 }
 
@@ -23,9 +23,13 @@ interface EditContextType {
   isEditMode: boolean;
   isAuthenticated: boolean;
   content: EditableContent;
+  products: Product[];
   setIsEditMode: (value: boolean) => void;
   setIsAuthenticated: (value: boolean) => void;
   updateContent: (key: keyof EditableContent, value: string) => void;
+  addProduct: (product: Omit<Product, 'id'>) => void;
+  updateProduct: (id: string, product: Partial<Product>) => void;
+  deleteProduct: (id: string) => void;
 }
 
 const defaultContent: EditableContent = {
@@ -34,17 +38,33 @@ const defaultContent: EditableContent = {
   heroButtonText: "SHOP NOW",
   aboutTitle: "About Aviator Nation",
   aboutDescription: "Vintage-inspired California lifestyle brand creating premium apparel with a retro aesthetic. Our designs capture the spirit of freedom and adventure.",
-  product1Title: "Classic Hoodie",
-  product1Description: "Soft, comfortable hoodie with vintage-inspired graphics",
-  product1Price: "$140",
-  product2Title: "Vintage Tee",
-  product2Description: "Premium cotton t-shirt with retro Aviator Nation design",
-  product2Price: "$65",
-  product3Title: "Sweatpants",
-  product3Description: "Comfortable sweatpants perfect for California lifestyle",
-  product3Price: "$120",
+  featuredProductsTitle: "Featured Products",
   footerText: "© 2024 Aviator Nation. All rights reserved."
 };
+
+const defaultProducts: Product[] = [
+  {
+    id: '1',
+    title: 'Classic Hoodie',
+    description: 'Soft, comfortable hoodie with vintage-inspired graphics',
+    price: '$140',
+    image: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=400&h=400&fit=crop'
+  },
+  {
+    id: '2',
+    title: 'Vintage Tee',
+    description: 'Premium cotton t-shirt with retro Aviator Nation design',
+    price: '$65',
+    image: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=400&h=400&fit=crop'
+  },
+  {
+    id: '3',
+    title: 'Sweatpants',
+    description: 'Comfortable sweatpants perfect for California lifestyle',
+    price: '$120',
+    image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=400&fit=crop'
+  }
+];
 
 const EditContext = createContext<EditContextType | undefined>(undefined);
 
@@ -52,6 +72,7 @@ export const EditProvider = ({ children }: { children: ReactNode }) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [content, setContent] = useState<EditableContent>(defaultContent);
+  const [products, setProducts] = useState<Product[]>(defaultProducts);
 
   const updateContent = (key: keyof EditableContent, value: string) => {
     setContent(prev => ({
@@ -60,14 +81,36 @@ export const EditProvider = ({ children }: { children: ReactNode }) => {
     }));
   };
 
+  const addProduct = (product: Omit<Product, 'id'>) => {
+    const newProduct: Product = {
+      ...product,
+      id: Date.now().toString()
+    };
+    setProducts(prev => [...prev, newProduct]);
+  };
+
+  const updateProduct = (id: string, updatedProduct: Partial<Product>) => {
+    setProducts(prev => prev.map(product => 
+      product.id === id ? { ...product, ...updatedProduct } : product
+    ));
+  };
+
+  const deleteProduct = (id: string) => {
+    setProducts(prev => prev.filter(product => product.id !== id));
+  };
+
   return (
     <EditContext.Provider value={{
       isEditMode,
       isAuthenticated,
       content,
+      products,
       setIsEditMode,
       setIsAuthenticated,
-      updateContent
+      updateContent,
+      addProduct,
+      updateProduct,
+      deleteProduct
     }}>
       {children}
     </EditContext.Provider>

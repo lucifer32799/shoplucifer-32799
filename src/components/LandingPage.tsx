@@ -2,14 +2,16 @@
 import React, { useState } from 'react';
 import { useEdit } from '@/contexts/EditContext';
 import EditableText from './EditableText';
+import EditableImage from './EditableImage';
 import AdminLogin from './AdminLogin';
 import AdminPanel from './AdminPanel';
+import ProductManager from './ProductManager';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
 const LandingPage = () => {
   const [showLogin, setShowLogin] = useState(false);
-  const { isAuthenticated } = useEdit();
+  const { isAuthenticated, products, updateProduct, deleteProduct, isEditMode } = useEdit();
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 to-orange-100">
@@ -18,7 +20,11 @@ const LandingPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-orange-600">AVIATOR NATION</h1>
+              <EditableText
+                contentKey="heroTitle"
+                element="h1"
+                className="text-2xl font-bold text-orange-600"
+              />
             </div>
             <nav className="hidden md:flex space-x-8">
               <a href="#" className="text-gray-700 hover:text-orange-600">SHOP</a>
@@ -84,78 +90,60 @@ const LandingPage = () => {
       {/* Products Section */}
       <section className="py-16 bg-orange-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-12">
-            Featured Products
-          </h2>
+          <EditableText
+            contentKey="featuredProductsTitle"
+            element="h2"
+            className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-12"
+          />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Product 1 */}
-            <Card className="hover:shadow-lg transition-shadow">
-              <div className="aspect-square bg-gradient-to-br from-orange-200 to-orange-300 rounded-t-lg"></div>
-              <CardContent className="p-6">
-                <EditableText
-                  contentKey="product1Title"
-                  element="h3"
-                  className="text-xl font-bold mb-2"
-                />
-                <EditableText
-                  contentKey="product1Description"
-                  element="p"
-                  className="text-gray-600 mb-4"
-                  multiline
-                />
-                <EditableText
-                  contentKey="product1Price"
-                  element="p"
-                  className="text-2xl font-bold text-orange-600"
-                />
-              </CardContent>
-            </Card>
-
-            {/* Product 2 */}
-            <Card className="hover:shadow-lg transition-shadow">
-              <div className="aspect-square bg-gradient-to-br from-red-200 to-red-300 rounded-t-lg"></div>
-              <CardContent className="p-6">
-                <EditableText
-                  contentKey="product2Title"
-                  element="h3"
-                  className="text-xl font-bold mb-2"
-                />
-                <EditableText
-                  contentKey="product2Description"
-                  element="p"
-                  className="text-gray-600 mb-4"
-                  multiline
-                />
-                <EditableText
-                  contentKey="product2Price"
-                  element="p"
-                  className="text-2xl font-bold text-orange-600"
-                />
-              </CardContent>
-            </Card>
-
-            {/* Product 3 */}
-            <Card className="hover:shadow-lg transition-shadow">
-              <div className="aspect-square bg-gradient-to-br from-yellow-200 to-yellow-300 rounded-t-lg"></div>
-              <CardContent className="p-6">
-                <EditableText
-                  contentKey="product3Title"
-                  element="h3"
-                  className="text-xl font-bold mb-2"
-                />
-                <EditableText
-                  contentKey="product3Description"
-                  element="p"
-                  className="text-gray-600 mb-4"
-                  multiline
-                />
-                <EditableText
-                  contentKey="product3Price"
-                  element="p"
-                  className="text-2xl font-bold text-orange-600"
-                />
-              </CardContent>
-            </Card>
+            {products.map((product) => (
+              <Card key={product.id} className="hover:shadow-lg transition-shadow relative">
+                {isEditMode && (
+                  <button
+                    onClick={() => deleteProduct(product.id)}
+                    className="absolute top-2 right-2 z-10 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:bg-red-600"
+                  >
+                    ×
+                  </button>
+                )}
+                <div className="aspect-square bg-gradient-to-br from-orange-200 to-orange-300 rounded-t-lg overflow-hidden">
+                  <EditableImage
+                    src={product.image || 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=400&h=400&fit=crop'}
+                    alt={product.title}
+                    onImageChange={(newSrc) => updateProduct(product.id, { image: newSrc })}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <CardContent className="p-6">
+                  {isEditMode ? (
+                    <div className="space-y-2">
+                      <input
+                        value={product.title}
+                        onChange={(e) => updateProduct(product.id, { title: e.target.value })}
+                        className="text-xl font-bold mb-2 w-full border-b border-gray-300 focus:border-blue-500 outline-none"
+                      />
+                      <textarea
+                        value={product.description}
+                        onChange={(e) => updateProduct(product.id, { description: e.target.value })}
+                        className="text-gray-600 mb-4 w-full border-b border-gray-300 focus:border-blue-500 outline-none resize-none"
+                        rows={2}
+                      />
+                      <input
+                        value={product.price}
+                        onChange={(e) => updateProduct(product.id, { price: e.target.value })}
+                        className="text-2xl font-bold text-orange-600 w-full border-b border-gray-300 focus:border-blue-500 outline-none"
+                      />
+                    </div>
+                  ) : (
+                    <>
+                      <h3 className="text-xl font-bold mb-2">{product.title}</h3>
+                      <p className="text-gray-600 mb-4">{product.description}</p>
+                      <p className="text-2xl font-bold text-orange-600">{product.price}</p>
+                    </>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
@@ -174,6 +162,7 @@ const LandingPage = () => {
       {/* Admin Components */}
       <AdminLogin isOpen={showLogin} onClose={() => setShowLogin(false)} />
       <AdminPanel />
+      <ProductManager />
     </div>
   );
 };

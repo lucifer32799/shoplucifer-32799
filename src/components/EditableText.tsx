@@ -1,10 +1,10 @@
 
 import React, { useState } from 'react';
-import { useEdit } from '@/contexts/EditContext';
+import { useEdit, EditableContent } from '@/contexts/EditContext';
 import { Input } from '@/components/ui/input';
 
 interface EditableTextProps {
-  contentKey: keyof import('@/contexts/EditContext').EditableContent;
+  contentKey: keyof EditableContent;
   className?: string;
   element?: 'h1' | 'h2' | 'h3' | 'p' | 'span';
   multiline?: boolean;

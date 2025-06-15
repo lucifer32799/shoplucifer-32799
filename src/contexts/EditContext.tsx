@@ -1,7 +1,7 @@
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-interface EditableContent {
+export interface EditableContent {
   heroTitle: string;
   heroSubtitle: string;
   heroButtonText: string;

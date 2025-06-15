@@ -3,15 +3,19 @@ import React, { useState } from 'react';
 import { useEdit } from '@/contexts/EditContext';
 import EditableText from './EditableText';
 import EditableImage from './EditableImage';
+import ProductFilter from './ProductFilter';
 import AdminLogin from './AdminLogin';
 import AdminPanel from './AdminPanel';
 import ProductManager from './ProductManager';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 
 const LandingPage = () => {
   const [showLogin, setShowLogin] = useState(false);
-  const { isAuthenticated, products, updateProduct, deleteProduct, isEditMode } = useEdit();
+  const { isAuthenticated, updateProduct, deleteProduct, isEditMode, getFilteredProducts } = useEdit();
+  
+  const filteredProducts = getFilteredProducts();
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 to-orange-100">
@@ -93,10 +97,13 @@ const LandingPage = () => {
           <EditableText
             contentKey="featuredProductsTitle"
             element="h2"
-            className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-12"
+            className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-8"
           />
+          
+          <ProductFilter />
+          
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {products.map((product) => (
+            {filteredProducts.map((product) => (
               <Card key={product.id} className="hover:shadow-lg transition-shadow relative">
                 {isEditMode && (
                   <button
@@ -125,26 +132,55 @@ const LandingPage = () => {
                       <textarea
                         value={product.description}
                         onChange={(e) => updateProduct(product.id, { description: e.target.value })}
-                        className="text-gray-600 mb-4 w-full border-b border-gray-300 focus:border-blue-500 outline-none resize-none"
+                        className="text-gray-600 mb-2 w-full border-b border-gray-300 focus:border-blue-500 outline-none resize-none"
                         rows={2}
+                      />
+                      <input
+                        value={product.category}
+                        onChange={(e) => updateProduct(product.id, { category: e.target.value })}
+                        placeholder="Danh mục"
+                        className="text-sm text-gray-500 mb-2 w-full border-b border-gray-300 focus:border-blue-500 outline-none"
                       />
                       <input
                         value={product.price}
                         onChange={(e) => updateProduct(product.id, { price: e.target.value })}
-                        className="text-2xl font-bold text-orange-600 w-full border-b border-gray-300 focus:border-blue-500 outline-none"
+                        className="text-2xl font-bold text-orange-600 mb-2 w-full border-b border-gray-300 focus:border-blue-500 outline-none"
+                      />
+                      <Input
+                        value={product.purchaseLink}
+                        onChange={(e) => updateProduct(product.id, { purchaseLink: e.target.value })}
+                        placeholder="Link mua hàng"
+                        className="text-sm border border-gray-300 focus:border-blue-500"
                       />
                     </div>
                   ) : (
                     <>
                       <h3 className="text-xl font-bold mb-2">{product.title}</h3>
-                      <p className="text-gray-600 mb-4">{product.description}</p>
-                      <p className="text-2xl font-bold text-orange-600">{product.price}</p>
+                      <p className="text-gray-600 mb-2">{product.description}</p>
+                      <p className="text-sm text-gray-500 mb-4">Danh mục: {product.category}</p>
+                      <div className="flex justify-between items-center">
+                        <p className="text-2xl font-bold text-orange-600">{product.price}</p>
+                        {product.purchaseLink && (
+                          <Button
+                            onClick={() => window.open(product.purchaseLink, '_blank')}
+                            className="bg-orange-600 hover:bg-orange-700"
+                          >
+                            Mua ngay
+                          </Button>
+                        )}
+                      </div>
                     </>
                   )}
                 </CardContent>
               </Card>
             ))}
           </div>
+          
+          {filteredProducts.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-gray-500 text-lg">Không có sản phẩm nào trong danh mục này.</p>
+            </div>
+          )}
         </div>
       </section>
 

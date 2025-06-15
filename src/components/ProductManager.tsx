@@ -15,15 +15,17 @@ const ProductManager = () => {
     title: '',
     description: '',
     price: '',
-    image: ''
+    image: '',
+    category: '',
+    purchaseLink: ''
   });
 
   if (!isEditMode) return null;
 
   const handleAddProduct = () => {
-    if (newProduct.title && newProduct.description && newProduct.price) {
+    if (newProduct.title && newProduct.description && newProduct.price && newProduct.category) {
       addProduct(newProduct);
-      setNewProduct({ title: '', description: '', price: '', image: '' });
+      setNewProduct({ title: '', description: '', price: '', image: '', category: '', purchaseLink: '' });
       setShowAddDialog(false);
     }
   };
@@ -54,7 +56,7 @@ const ProductManager = () => {
           <DialogHeader>
             <DialogTitle>Thêm sản phẩm mới</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="space-y-4 max-h-96 overflow-y-auto">
             <div>
               <Label htmlFor="title">Tên sản phẩm</Label>
               <Input
@@ -83,12 +85,30 @@ const ProductManager = () => {
               />
             </div>
             <div>
+              <Label htmlFor="category">Danh mục</Label>
+              <Input
+                id="category"
+                value={newProduct.category}
+                onChange={(e) => setNewProduct(prev => ({ ...prev, category: e.target.value }))}
+                placeholder="VD: Áo phông, Quần dài, Váy..."
+              />
+            </div>
+            <div>
               <Label htmlFor="image">URL hình ảnh</Label>
               <Input
                 id="image"
                 value={newProduct.image}
                 onChange={(e) => setNewProduct(prev => ({ ...prev, image: e.target.value }))}
                 placeholder="https://example.com/image.jpg"
+              />
+            </div>
+            <div>
+              <Label htmlFor="purchaseLink">Link mua hàng</Label>
+              <Input
+                id="purchaseLink"
+                value={newProduct.purchaseLink}
+                onChange={(e) => setNewProduct(prev => ({ ...prev, purchaseLink: e.target.value }))}
+                placeholder="https://example.com/buy"
               />
             </div>
             <div className="flex space-x-2">
@@ -110,14 +130,17 @@ const ProductManager = () => {
       <Dialog open={showFilterDialog} onOpenChange={setShowFilterDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Lọc sản phẩm</DialogTitle>
+            <DialogTitle>Quản lý sản phẩm</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="space-y-4 max-h-96 overflow-y-auto">
             <p>Hiện có {products.length} sản phẩm</p>
             <div className="space-y-2">
               {products.map((product) => (
                 <div key={product.id} className="flex justify-between items-center p-2 border rounded">
-                  <span>{product.title}</span>
+                  <div>
+                    <span className="font-medium">{product.title}</span>
+                    <span className="text-sm text-gray-500 ml-2">({product.category})</span>
+                  </div>
                   <span className="text-green-600">{product.price}</span>
                 </div>
               ))}

@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 export interface Product {
   id: string;
@@ -78,6 +78,25 @@ const defaultProducts: Product[] = [
   }
 ];
 
+// Helper functions for localStorage
+const saveToLocalStorage = (key: string, data: any) => {
+  try {
+    localStorage.setItem(key, JSON.stringify(data));
+  } catch (error) {
+    console.error('Error saving to localStorage:', error);
+  }
+};
+
+const loadFromLocalStorage = (key: string, defaultValue: any) => {
+  try {
+    const saved = localStorage.getItem(key);
+    return saved ? JSON.parse(saved) : defaultValue;
+  } catch (error) {
+    console.error('Error loading from localStorage:', error);
+    return defaultValue;
+  }
+};
+
 const EditContext = createContext<EditContextType | undefined>(undefined);
 
 export const EditProvider = ({ children }: { children: ReactNode }) => {
@@ -86,6 +105,25 @@ export const EditProvider = ({ children }: { children: ReactNode }) => {
   const [content, setContent] = useState<EditableContent>(defaultContent);
   const [products, setProducts] = useState<Product[]>(defaultProducts);
   const [selectedCategory, setSelectedCategory] = useState<string>('Tất cả');
+
+  // Load data from localStorage on component mount
+  useEffect(() => {
+    const savedContent = loadFromLocalStorage('editableContent', defaultContent);
+    const savedProducts = loadFromLocalStorage('products', defaultProducts);
+    
+    setContent(savedContent);
+    setProducts(savedProducts);
+  }, []);
+
+  // Save content to localStorage whenever it changes
+  useEffect(() => {
+    saveToLocalStorage('editableContent', content);
+  }, [content]);
+
+  // Save products to localStorage whenever they change
+  useEffect(() => {
+    saveToLocalStorage('products', products);
+  }, [products]);
 
   const updateContent = (key: keyof EditableContent, value: string) => {
     setContent(prev => ({

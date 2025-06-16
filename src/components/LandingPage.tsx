@@ -30,17 +30,12 @@ const LandingPage = () => {
                 className="text-2xl font-bold text-orange-600"
               />
             </div>
-            <nav className="hidden md:flex space-x-8">
-              <a href="#" className="text-gray-700 hover:text-orange-600">SHOP</a>
-              <a href="#" className="text-gray-700 hover:text-orange-600">ABOUT</a>
-              <a href="#" className="text-gray-700 hover:text-orange-600">CONTACT</a>
-            </nav>
             {!isAuthenticated && (
               <Button
                 onClick={() => setShowLogin(true)}
                 variant="outline"
                 size="sm"
-                className="ml-4"
+                className="ml-4 blur-[20px] opacity-10 pointer-events-none select-none"
               >
                 Admin
               </Button>

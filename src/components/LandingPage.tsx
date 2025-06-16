@@ -35,7 +35,7 @@ const LandingPage = () => {
                 onClick={() => setShowLogin(true)}
                 variant="outline"
                 size="sm"
-                className="ml-4 blur-[20px] opacity-10 pointer-events-none select-none"
+                className="ml-4 opacity-0"
               >
                 Admin
               </Button>

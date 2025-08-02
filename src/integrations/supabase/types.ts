@@ -14,7 +14,93 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      content: {
+        Row: {
+          created_at: string
+          id: string
+          key: string
+          updated_at: string
+          value: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          key: string
+          updated_at?: string
+          value: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          key?: string
+          updated_at?: string
+          value?: string
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          id: string
+          images: string[] | null
+          is_featured: boolean | null
+          purchase_link: string | null
+          shop_link: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          images?: string[] | null
+          is_featured?: boolean | null
+          purchase_link?: string | null
+          shop_link?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          images?: string[] | null
+          is_featured?: boolean | null
+          purchase_link?: string | null
+          shop_link?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      website_settings: {
+        Row: {
+          created_at: string
+          id: string
+          redirect_url: string | null
+          site_title: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          redirect_url?: string | null
+          site_title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          redirect_url?: string | null
+          site_title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

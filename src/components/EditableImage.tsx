@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { useEdit } from '@/contexts/EditContext';
+import { useEdit } from '@/contexts/SupabaseEditContext';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 

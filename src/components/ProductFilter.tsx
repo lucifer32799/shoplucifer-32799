@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useEdit } from '@/contexts/EditContext';
+import { useEdit } from '@/contexts/SupabaseEditContext';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,

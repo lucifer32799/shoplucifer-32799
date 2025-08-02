@@ -1,44 +1,34 @@
+
 import React, { useState } from 'react';
-import { useEdit } from '@/contexts/SupabaseEditContext';
+import { useEdit, EditableContent } from '@/contexts/EditContext';
 import { Input } from '@/components/ui/input';
 
 interface EditableTextProps {
-  contentKey: string;
-  initialText: string;
+  contentKey: keyof EditableContent;
   className?: string;
-  as?: 'h1' | 'h2' | 'h3' | 'p' | 'span';
+  element?: 'h1' | 'h2' | 'h3' | 'p' | 'span';
   multiline?: boolean;
 }
 
-const EditableText = ({ contentKey, initialText, className = '', as = 'p', multiline = false }: EditableTextProps) => {
-  const { isEditMode, updateContent, content } = useEdit();
-  const currentText = content[contentKey] || initialText;
-  const [text, setText] = useState(currentText);
+const EditableText = ({ contentKey, className = '', element = 'p', multiline = false }: EditableTextProps) => {
+  const { isEditMode, content, updateContent } = useEdit();
   const [isEditing, setIsEditing] = useState(false);
-
-  // Update local text when content changes
-  React.useEffect(() => {
-    setText(currentText);
-  }, [currentText]);
+  const [tempValue, setTempValue] = useState(content[contentKey]);
 
   const handleClick = () => {
     if (isEditMode) {
       setIsEditing(true);
-      setText(currentText);
+      setTempValue(content[contentKey]);
     }
   };
 
-  const handleSave = async () => {
-    try {
-      await updateContent(contentKey, text);
-      setIsEditing(false);
-    } catch (error) {
-      console.error('Error updating content:', error);
-    }
+  const handleSave = () => {
+    updateContent(contentKey, tempValue);
+    setIsEditing(false);
   };
 
   const handleCancel = () => {
-    setText(currentText);
+    setTempValue(content[contentKey]);
     setIsEditing(false);
   };
 
@@ -55,8 +45,8 @@ const EditableText = ({ contentKey, initialText, className = '', as = 'p', multi
       <div className="relative">
         {multiline ? (
           <textarea
-            value={text}
-            onChange={(e) => setText(e.target.value)}
+            value={tempValue}
+            onChange={(e) => setTempValue(e.target.value)}
             onBlur={handleSave}
             onKeyDown={handleKeyDown}
             className={`${className} border-2 border-blue-500 bg-white text-black p-2 rounded`}
@@ -65,8 +55,8 @@ const EditableText = ({ contentKey, initialText, className = '', as = 'p', multi
           />
         ) : (
           <Input
-            value={text}
-            onChange={(e) => setText(e.target.value)}
+            value={tempValue}
+            onChange={(e) => setTempValue(e.target.value)}
             onBlur={handleSave}
             onKeyDown={handleKeyDown}
             className={`${className} border-2 border-blue-500`}
@@ -77,14 +67,14 @@ const EditableText = ({ contentKey, initialText, className = '', as = 'p', multi
     );
   }
 
-  const Component = as;
+  const Component = element;
   
   return (
     <Component
-      className={`${className} ${isEditMode ? 'cursor-pointer hover:bg-blue-50 rounded px-2 py-1' : ''}`}
+      className={`${className} ${isEditMode ? 'cursor-pointer hover:bg-blue-100 hover:bg-opacity-30 rounded p-1' : ''}`}
       onClick={handleClick}
     >
-      {currentText}
+      {content[contentKey]}
       {isEditMode && (
         <span className="ml-2 text-blue-500 text-sm">✏️</span>
       )}

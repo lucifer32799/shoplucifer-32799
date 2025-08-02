@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useEdit } from '@/contexts/SupabaseEditContext';
+import { useEdit } from '@/contexts/EditContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 

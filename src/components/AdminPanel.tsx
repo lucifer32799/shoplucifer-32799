@@ -5,12 +5,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const AdminPanel = () => {
-  const { isAuthenticated, isEditMode, setIsEditMode, signOut } = useEdit();
+  const { isAuthenticated, isEditMode, setIsEditMode, setIsAuthenticated } = useEdit();
 
   if (!isAuthenticated) return null;
 
-  const handleLogout = async () => {
-    await signOut();
+  const handleLogout = () => {
+    setIsAuthenticated(false);
     setIsEditMode(false);
   };
 

@@ -86,5 +86,5 @@ export const useSupabaseAuth = () => {
     }
   };
 
-  return { isAuthenticated, loading, signIn, signOut };
+  return { isAuthenticated, setIsAuthenticated, loading, signIn, signOut };
 };

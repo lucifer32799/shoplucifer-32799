@@ -13,6 +13,7 @@ interface EditContextType {
   selectedCategory: string;
   loading: boolean;
   setIsEditMode: (value: boolean) => void;
+  setIsAuthenticated: (value: boolean) => void;
   setSelectedCategory: (category: string) => void;
   updateContent: (key: keyof EditableContent, value: string) => void;
   addProduct: (product: Omit<Product, 'id'>) => void;
@@ -33,7 +34,7 @@ export const EditProvider = ({ children }: { children: ReactNode }) => {
   // Use Supabase hooks
   const { content, updateContent, loading: contentLoading } = useSupabaseContent();
   const { products, addProduct, updateProduct, deleteProduct, loading: productsLoading } = useSupabaseProducts();
-  const { isAuthenticated, signIn, signOut } = useSupabaseAuth();
+  const { isAuthenticated, setIsAuthenticated, signIn, signOut } = useSupabaseAuth();
 
   const loading = contentLoading || productsLoading;
 
@@ -58,6 +59,7 @@ export const EditProvider = ({ children }: { children: ReactNode }) => {
       selectedCategory,
       loading,
       setIsEditMode,
+      setIsAuthenticated,
       setSelectedCategory,
       updateContent,
       addProduct,

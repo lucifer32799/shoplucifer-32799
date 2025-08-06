@@ -59,7 +59,7 @@ export const useSupabaseContent = () => {
     try {
       const { error } = await supabase
         .from('content')
-        .upsert({ key, value });
+        .upsert({ key, value }, { onConflict: 'key' });
 
       if (error) {
         console.error('Error updating content:', error);

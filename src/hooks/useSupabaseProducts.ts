@@ -12,6 +12,7 @@ export interface Product {
   purchase_link: string | null;
   shop_link: string | null;
   is_featured: boolean | null;
+  price: string;
 }
 
 const defaultProducts: Product[] = [
@@ -23,7 +24,8 @@ const defaultProducts: Product[] = [
     category: 'Áo hoodie',
     purchase_link: 'https://example.com/hoodie',
     shop_link: null,
-    is_featured: true
+    is_featured: true,
+    price: '$89.00'
   },
   {
     id: crypto.randomUUID(),
@@ -33,7 +35,8 @@ const defaultProducts: Product[] = [
     category: 'Áo phông',
     purchase_link: 'https://example.com/tee',
     shop_link: null,
-    is_featured: true
+    is_featured: true,
+    price: '$45.00'
   },
   {
     id: crypto.randomUUID(),
@@ -43,7 +46,8 @@ const defaultProducts: Product[] = [
     category: 'Quần dài',
     purchase_link: 'https://example.com/sweatpants',
     shop_link: null,
-    is_featured: true
+    is_featured: true,
+    price: '$65.00'
   }
 ];
 

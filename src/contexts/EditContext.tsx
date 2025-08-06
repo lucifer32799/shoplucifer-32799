@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { EditableContent } from '@/hooks/useSupabaseContent';
 import { Product } from '@/hooks/useSupabaseProducts';
@@ -59,25 +58,6 @@ const defaultProducts: Product[] = [
     purchaseLink: 'https://example.com/sweatpants'
   }
 ];
-
-// Helper functions for localStorage
-const saveToLocalStorage = (key: string, data: any) => {
-  try {
-    localStorage.setItem(key, JSON.stringify(data));
-  } catch (error) {
-    console.error('Error saving to localStorage:', error);
-  }
-};
-
-const loadFromLocalStorage = (key: string, defaultValue: any) => {
-  try {
-    const saved = localStorage.getItem(key);
-    return saved ? JSON.parse(saved) : defaultValue;
-  } catch (error) {
-    console.error('Error loading from localStorage:', error);
-    return defaultValue;
-  }
-};
 
 const EditContext = createContext<EditContextType | undefined>(undefined);
 

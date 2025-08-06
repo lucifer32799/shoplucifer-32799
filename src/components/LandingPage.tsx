@@ -110,9 +110,9 @@ const LandingPage = () => {
                 )}
                 <div className="aspect-square bg-gradient-to-br from-orange-200 to-orange-300 rounded-t-lg overflow-hidden">
                   <EditableImage
-                    src={product.image || 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=400&h=400&fit=crop'}
+                    src={product.images?.[0] || 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=400&h=400&fit=crop'}
                     alt={product.title}
-                    onImageChange={(newSrc) => updateProduct(product.id, { image: newSrc })}
+                    onImageChange={(newSrc) => updateProduct(product.id, { images: [newSrc] })}
                     className="w-full h-full object-cover"
                   />
                 </div>

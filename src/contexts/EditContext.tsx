@@ -1,8 +1,7 @@
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { useSupabaseContent, EditableContent } from '@/hooks/useSupabaseContent';
-import { useSupabaseProducts, Product } from '@/hooks/useSupabaseProducts';
-import { useSupabaseAuth } from '@/hooks/useSupabaseAuth';
+import { EditableContent } from '@/hooks/useSupabaseContent';
+import { Product } from '@/hooks/useSupabaseProducts';
 
 interface EditContextType {
   isEditMode: boolean;
@@ -89,25 +88,6 @@ export const EditProvider = ({ children }: { children: ReactNode }) => {
   const [products, setProducts] = useState<Product[]>(defaultProducts);
   const [selectedCategory, setSelectedCategory] = useState<string>('Tất cả');
 
-  // Load data from localStorage on component mount
-  useEffect(() => {
-    const savedContent = loadFromLocalStorage('editableContent', defaultContent);
-    const savedProducts = loadFromLocalStorage('products', defaultProducts);
-    
-    setContent(savedContent);
-    setProducts(savedProducts);
-  }, []);
-
-  // Save content to localStorage whenever it changes
-  useEffect(() => {
-    saveToLocalStorage('editableContent', content);
-  }, [content]);
-
-  // Save products to localStorage whenever they change
-  useEffect(() => {
-    saveToLocalStorage('products', products);
-  }, [products]);
-
   const updateContent = (key: keyof EditableContent, value: string) => {
     setContent(prev => ({
       ...prev,
@@ -133,7 +113,7 @@ export const EditProvider = ({ children }: { children: ReactNode }) => {
     setProducts(prev => prev.filter(product => product.id !== id));
   };
 
-  const getCategories = () => {
+  const getCategories = (): string[] => {
     const categories = Array.from(new Set(products.map(product => product.category)));
     return ['Tất cả', ...categories];
   };
@@ -174,3 +154,5 @@ export const useEdit = () => {
   }
   return context;
 };
+
+export type { EditableContent };

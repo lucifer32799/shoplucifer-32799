@@ -15,9 +15,9 @@ const ProductManager = () => {
     title: '',
     description: '',
     price: '',
-    image: '',
+    images: [''],
     category: '',
-    purchaseLink: ''
+    purchase_link: ''
   });
 
   if (!isEditMode) return null;
@@ -25,7 +25,7 @@ const ProductManager = () => {
   const handleAddProduct = () => {
     if (newProduct.title && newProduct.description && newProduct.price && newProduct.category) {
       addProduct(newProduct);
-      setNewProduct({ title: '', description: '', price: '', image: '', category: '', purchaseLink: '' });
+      setNewProduct({ title: '', description: '', price: '', images: [''], category: '', purchase_link: '' });
       setShowAddDialog(false);
     }
   };
@@ -97,8 +97,8 @@ const ProductManager = () => {
               <Label htmlFor="image">URL hình ảnh</Label>
               <Input
                 id="image"
-                value={newProduct.image}
-                onChange={(e) => setNewProduct(prev => ({ ...prev, image: e.target.value }))}
+                value={newProduct.images[0] || ''}
+                onChange={(e) => setNewProduct(prev => ({ ...prev, images: [e.target.value] }))}
                 placeholder="https://example.com/image.jpg"
               />
             </div>
@@ -106,8 +106,8 @@ const ProductManager = () => {
               <Label htmlFor="purchaseLink">Link mua hàng</Label>
               <Input
                 id="purchaseLink"
-                value={newProduct.purchaseLink}
-                onChange={(e) => setNewProduct(prev => ({ ...prev, purchaseLink: e.target.value }))}
+                value={newProduct.purchase_link}
+                onChange={(e) => setNewProduct(prev => ({ ...prev, purchase_link: e.target.value }))}
                 placeholder="https://example.com/buy"
               />
             </div>

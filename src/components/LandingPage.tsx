@@ -142,8 +142,8 @@ const LandingPage = () => {
                         className="text-2xl font-bold text-orange-600 mb-2 w-full border-b border-gray-300 focus:border-blue-500 outline-none"
                       />
                       <Input
-                        value={product.purchaseLink}
-                        onChange={(e) => updateProduct(product.id, { purchaseLink: e.target.value })}
+                        value={product.purchase_link}
+                        onChange={(e) => updateProduct(product.id, { purchase_link: e.target.value })}
                         placeholder="Link mua hàng"
                         className="text-sm border border-gray-300 focus:border-blue-500"
                       />
@@ -155,9 +155,9 @@ const LandingPage = () => {
                       <p className="text-sm text-gray-500 mb-4">Danh mục: {product.category}</p>
                       <div className="flex justify-between items-center">
                         <p className="text-2xl font-bold text-orange-600">{product.price}</p>
-                        {product.purchaseLink && (
+                        {product.purchase_link && (
                           <Button
-                            onClick={() => window.open(product.purchaseLink, '_blank')}
+                            onClick={() => window.open(product.purchase_link, '_blank')}
                             className="bg-orange-600 hover:bg-orange-700"
                           >
                             Mua ngay

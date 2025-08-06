@@ -16,7 +16,7 @@ export interface Product {
 
 const defaultProducts: Product[] = [
   {
-    id: '1',
+    id: crypto.randomUUID(),
     title: 'Classic Hoodie',
     description: 'Soft, comfortable hoodie with vintage-inspired graphics',
     images: ['https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=400&h=400&fit=crop'],
@@ -26,7 +26,7 @@ const defaultProducts: Product[] = [
     is_featured: true
   },
   {
-    id: '2',
+    id: crypto.randomUUID(),
     title: 'Vintage Tee',
     description: 'Premium cotton t-shirt with retro Aviator Nation design',
     images: ['https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=400&h=400&fit=crop'],
@@ -36,7 +36,7 @@ const defaultProducts: Product[] = [
     is_featured: true
   },
   {
-    id: '3',
+    id: crypto.randomUUID(),
     title: 'Sweatpants',
     description: 'Comfortable sweatpants perfect for California lifestyle',
     images: ['https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=400&fit=crop'],

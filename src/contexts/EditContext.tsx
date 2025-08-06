@@ -1,6 +1,9 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { EditableContent } from '@/hooks/useSupabaseContent';
-import { Product } from '@/hooks/useSupabaseProducts';
+import { useSupabaseContent } from '@/hooks/useSupabaseContent';
+import { useSupabaseProducts } from '@/hooks/useSupabaseProducts';
+import type { EditableContent } from '@/hooks/useSupabaseContent';
+import type { Product } from '@/hooks/useSupabaseProducts';
+import { useSupabaseAuth } from '@/hooks/useSupabaseAuth';
 
 interface EditContextType {
   isEditMode: boolean;
@@ -8,8 +11,8 @@ interface EditContextType {
   content: EditableContent;
   products: Product[];
   selectedCategory: string;
+  loading: boolean;
   setIsEditMode: (value: boolean) => void;
-  setIsAuthenticated: (value: boolean) => void;
   setSelectedCategory: (category: string) => void;
   updateContent: (key: keyof EditableContent, value: string) => void;
   addProduct: (product: Omit<Product, 'id'>) => void;
@@ -17,81 +20,22 @@ interface EditContextType {
   deleteProduct: (id: string) => void;
   getCategories: () => string[];
   getFilteredProducts: () => Product[];
+  signIn: (email: string, password: string) => Promise<boolean>;
+  signOut: () => Promise<void>;
 }
-
-const defaultContent: EditableContent = {
-  heroTitle: "AVIATOR NATION",
-  heroSubtitle: "Vintage-Inspired California Lifestyle",
-  heroButtonText: "SHOP NOW",
-  aboutTitle: "About Aviator Nation",
-  aboutDescription: "Vintage-inspired California lifestyle brand creating premium apparel with a retro aesthetic. Our designs capture the spirit of freedom and adventure.",
-  featuredProductsTitle: "Featured Products",
-  footerText: "© 2024 Aviator Nation. All rights reserved."
-};
-
-const defaultProducts: Product[] = [
-  {
-    id: '1',
-    title: 'Classic Hoodie',
-    description: 'Soft, comfortable hoodie with vintage-inspired graphics',
-    price: '$140',
-    image: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=400&h=400&fit=crop',
-    category: 'Áo hoodie',
-    purchaseLink: 'https://example.com/hoodie'
-  },
-  {
-    id: '2',
-    title: 'Vintage Tee',
-    description: 'Premium cotton t-shirt with retro Aviator Nation design',
-    price: '$65',
-    image: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=400&h=400&fit=crop',
-    category: 'Áo phông',
-    purchaseLink: 'https://example.com/tee'
-  },
-  {
-    id: '3',
-    title: 'Sweatpants',
-    description: 'Comfortable sweatpants perfect for California lifestyle',
-    price: '$120',
-    image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=400&fit=crop',
-    category: 'Quần dài',
-    purchaseLink: 'https://example.com/sweatpants'
-  }
-];
 
 const EditContext = createContext<EditContextType | undefined>(undefined);
 
 export const EditProvider = ({ children }: { children: ReactNode }) => {
   const [isEditMode, setIsEditMode] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [content, setContent] = useState<EditableContent>(defaultContent);
-  const [products, setProducts] = useState<Product[]>(defaultProducts);
   const [selectedCategory, setSelectedCategory] = useState<string>('Tất cả');
+  
+  // Use Supabase hooks
+  const { content, updateContent, loading: contentLoading } = useSupabaseContent();
+  const { products, addProduct, updateProduct, deleteProduct, loading: productsLoading } = useSupabaseProducts();
+  const { isAuthenticated, signIn, signOut } = useSupabaseAuth();
 
-  const updateContent = (key: keyof EditableContent, value: string) => {
-    setContent(prev => ({
-      ...prev,
-      [key]: value
-    }));
-  };
-
-  const addProduct = (product: Omit<Product, 'id'>) => {
-    const newProduct: Product = {
-      ...product,
-      id: Date.now().toString()
-    };
-    setProducts(prev => [...prev, newProduct]);
-  };
-
-  const updateProduct = (id: string, updatedProduct: Partial<Product>) => {
-    setProducts(prev => prev.map(product => 
-      product.id === id ? { ...product, ...updatedProduct } : product
-    ));
-  };
-
-  const deleteProduct = (id: string) => {
-    setProducts(prev => prev.filter(product => product.id !== id));
-  };
+  const loading = contentLoading || productsLoading;
 
   const getCategories = (): string[] => {
     const categories = Array.from(new Set(products.map(product => product.category)));
@@ -112,15 +56,17 @@ export const EditProvider = ({ children }: { children: ReactNode }) => {
       content,
       products,
       selectedCategory,
+      loading,
       setIsEditMode,
-      setIsAuthenticated,
       setSelectedCategory,
       updateContent,
       addProduct,
       updateProduct,
       deleteProduct,
       getCategories,
-      getFilteredProducts
+      getFilteredProducts,
+      signIn,
+      signOut
     }}>
       {children}
     </EditContext.Provider>

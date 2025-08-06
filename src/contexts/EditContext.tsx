@@ -1,25 +1,8 @@
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-
-export interface Product {
-  id: string;
-  title: string;
-  description: string;
-  price: string;
-  image: string;
-  category: string;
-  purchaseLink: string;
-}
-
-export interface EditableContent {
-  heroTitle: string;
-  heroSubtitle: string;
-  heroButtonText: string;
-  aboutTitle: string;
-  aboutDescription: string;
-  featuredProductsTitle: string;
-  footerText: string;
-}
+import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { useSupabaseContent, EditableContent } from '@/hooks/useSupabaseContent';
+import { useSupabaseProducts, Product } from '@/hooks/useSupabaseProducts';
+import { useSupabaseAuth } from '@/hooks/useSupabaseAuth';
 
 interface EditContextType {
   isEditMode: boolean;
